@@ -6,10 +6,12 @@
 
     let numSelectors = 2;
 
-    let selectors = Array(numSelectors).fill("");
+    let selectors = Array(numSelectors).fill(null);
     const addSelector = () => {
-        numSelectors += 1;
-        selectors.push(null); // Add a new slot for the new component instance
+        if (numSelectors < 45) {
+            numSelectors += 1;
+            selectors.push(null); // Add a new slot for the new component instance
+        }
     };
     const removeSelector = () => {
         if (numSelectors > 0) {
@@ -21,7 +23,9 @@
     let aggregatedData = [];
 
     async function gatherAndSendData() {
-        aggregatedData = selectors.map((child) => child.getData());
+        aggregatedData = selectors.map((child) =>
+            child ? child.getData() : {}
+        );
 
         console.log(aggregatedData);
         try {
@@ -60,8 +64,9 @@
     div {
         display: flex;
         flex-direction: column;
-        max-width: 100%;
-        max-height: 50%;
+
         flex-wrap: wrap;
+        width: 80vw;
+        height: 60vw;
     }
 </style>

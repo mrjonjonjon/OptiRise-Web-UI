@@ -1,15 +1,17 @@
 <script>
     import AutoComplete from "simple-svelte-autocomplete";
-    import { createEventDispatcher } from "svelte";
-
-    const skills = ["WeaknessExploit", "BladescaleHone", "Agitator"];
+    import { deco_skills } from "./all_deco_skills";
+    const skills = deco_skills;
     const levels = [1, 2, 3];
     let selectedLevel;
     let selectedDeco;
     function getData() {
-        return { [`${selectedDeco}`]: selectedLevel };
+        if (selectedDeco && selectedLevel) {
+            return { [`${selectedDeco}`]: selectedLevel };
+        } else {
+            return {};
+        }
     }
-
     export { getData };
 </script>
 
@@ -33,13 +35,13 @@
     .single-deco-selector {
         display: flex;
         flex-direction: row;
-        width: 50%;
-        margin: 5px;
-        align-items: center;
+        margin: 2px;
+        align-items: stretch;
         justify-content: center;
-        margin: 20px;
+        flex-shrink: 1;
     }
     .single-deco-selector :global(.autocomplete) {
+        min-width: 20%;
     }
 
     .single-deco-selector :global(.level-input) {
