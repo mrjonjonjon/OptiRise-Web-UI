@@ -1,0 +1,42 @@
+{
+	"name": "optirise-app",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "npm run smui-theme-light && npm run smui-theme-dark",
+		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
+		"smui-theme-dark": "smui-theme compile static/smui-dark.css -i src/theme/dark"
+	},
+	"devDependencies": {
+		"@material/elevation": "^14.0.0",
+		"@material/switch": "^14.0.0",
+		"@smui-extra/accordion": "^7.0.0-beta.15",
+		"@smui-extra/autocomplete": "^7.0.0-beta.15",
+		"@smui/button": "^7.0.0-beta.15",
+		"@smui/chips": "^7.0.0-beta.15",
+		"@smui/data-table": "^7.0.0-beta.15",
+		"@smui/icon-button": "^7.0.0-beta.15",
+		"@smui/layout-grid": "^7.0.0-beta.15",
+		"@smui/list": "^7.0.0-beta.15",
+		"@smui/select": "^7.0.0-beta.15",
+		"@smui/switch": "^7.0.0-beta.15",
+		"@smui/tab": "^7.0.0-beta.15",
+		"@smui/tab-bar": "^7.0.0-beta.15",
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.20.4",
+		"sass": "^1.66.1",
+		"sass-loader": "^13.3.2",
+		"smui-theme": "^7.0.0-beta.15",
+		"svelte": "^4.0.5",
+		"svelte-preprocess": "^5.0.4",
+		"vite": "^4.4.2",
+		"webpack": "^5.88.2"
+	},
+	"type": "module",
+	"dependencies": {
+		"svelte-table": "^0.6.1"
+	}
+}
