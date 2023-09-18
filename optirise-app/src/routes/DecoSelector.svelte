@@ -4,70 +4,167 @@
   import Select, { Option } from "@smui/select";
   import Chip, { Set, TrailingAction, Text } from "@smui/chips";
   import Button, { Label } from "@smui/button";
+  export let getSolutions;
+  let all_skills = [];
 
-  let fruits = ["WeaknessExploit", "Orange", "Banana", "Mango"];
-  let levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  fetch("/all_skills.json")
+    .then((response) => response.json())
+    .then((json) => {
+      all_skills = json;
+    });
+  // Read the JSON file synchronously
+  //const jsonString = fs.readFileSync("../../static/all_skills.json", "utf8");
+  //console.log(data);
+
   let relations = [">=", ">", "=", "<", "<="];
   let valueOutlined;
-  let selectedLevel;
+  let selectedLevel = 0;
   let selectedRelation = ">=";
 
-  let input = [1, 2, 3, 4];
+  export let constraints = [
+    { skill: "WeaknessExploit", relation: "<", level: 2 },
+    /*
+    { skill: "AttackBoost", relation: "<=", level: 7 },
+    { skill: "CriticalEye", relation: "<=", level: 7 },
+    { skill: "Earplugs", relation: "<", level: 5 },
+    { skill: "Handicraft", relation: "<", level: 5 },
+    { skill: "Agitator", relation: "<=", level: 5 },
+    { skill: "HealthBoost", relation: "<=", level: 3 },
+    { skill: "CriticalBoost", relation: "<", level: 3 },
+    { skill: "Guard", relation: "<", level: 5 },
+    { skill: "EvadeWindow", relation: "<=", level: 5 },
+    { skill: "Focus", relation: "<", level: 3 },
+    { skill: "StaminaSurge", relation: "<", level: 3 },
+    { skill: "Windproof", relation: "<", level: 5 },
+    { skill: "Partbreaker", relation: "<", level: 3 },
+    { skill: "QuickSheath", relation: "<", level: 3 },
+    { skill: "SpeedEating", relation: "<", level: 3 },
+    { skill: "DivineBlessing", relation: "<", level: 3 },
+    { skill: "GuardUp", relation: "<", level: 1 },
+    { skill: "FreeMeal", relation: "<", level: 3 },
+    { skill: "WideRange", relation: "<", level: 5 },
+    { skill: "SpeedSharpening", relation: "<", level: 3 },
+    */
+  ];
 
-  function addInputChip() {
-    if (input.length) {
-      input.push(input[input.length - 1] + 1);
-      input = input;
-    } else {
-      input.push(1);
-      input = input;
-    }
+  function addInputChip(skill, relation, level) {
+    constraints.push({ skill, relation, level });
+    constraints = constraints;
   }
 </script>
 
-<div class="single-deco-selector-container">
-  <Autocomplete
-    options={fruits}
-    textfield$variant="outlined"
-    bind:value={valueOutlined}
-    label="Skill"
-    class="deco-autocomplete"
-  />
-  <Select bind:value={selectedRelation} class="level-autocomplete">
-    {#each relations as rel}
-      <Option value={rel}>{rel}</Option>
-    {/each}
-  </Select>
-  <Autocomplete
-    options={levels}
-    textfield$variant="outlined"
-    bind:value={selectedLevel}
-    label="Level"
-    class="level-autocomplete"
-  />
+<div class="top-deco-selector">
+  <div class="selector-row">
+    <Autocomplete
+      options={all_skills}
+      textfield$variant="outlined"
+      bind:value={valueOutlined}
+      label="Skill"
+      class="deco-autocomplete"
+    />
+    <Select bind:value={selectedRelation} class="level-autocomplete">
+      {#each relations as rel}
+        <Option value={rel}>{rel}</Option>
+      {/each}
+    </Select>
+
+    <Select bind:value={selectedLevel} class="level-autocomplete">
+      {#each { length: 10 } as _, i}
+        <Option value={i}>{i}</Option>
+      {/each}
+    </Select>
+  </div>
+  <div class="button-and-chips">
+    <Button
+      class="add-button"
+      on:click={addInputChip(valueOutlined, selectedRelation, selectedLevel)}
+      ><Label>Add</Label></Button
+    >
+    <Button
+      class="find-solutions-button"
+      on:click={() => {
+        getSolutions(constraints);
+      }}><Label>Find Solutions</Label></Button
+    >
+
+    <Set chips={constraints} let:chip input>
+      <Chip {chip}>
+        <Text>{chip.skill} {chip.relation} {chip.level}</Text>
+        <TrailingAction icon$class="material-icons">cancel</TrailingAction>
+      </Chip>
+    </Set>
+  </div>
 </div>
 
 <style>
-  .single-deco-selector-container :global(div > span > span) {
+  .top-deco-selector :global(.mdc-select),
+  :global(.smui-autocomplete) {
+    border: 1px solid rgb(255, 255, 255);
+    box-sizing: border-box;
+    width: 100%;
+    padding: auto;
+  }
+  .button-and-chips {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-deco-selector :global(.add-button) {
+    padding: 0px;
+    flex-grow: 1;
+    width: 90%;
+    margin: 10px;
+    display: inline-block;
+
+    background-color: rgb(34, 236, 51);
+    color: rgb(63, 61, 61);
+    box-sizing: border-box;
+    border-radius: 20px;
+  }
+
+  .top-deco-selector :global(.find-solutions-button) {
+    padding: 0px;
+    flex-grow: 1;
+    width: 90%;
+    margin: 10px;
+    display: inline-block;
+
+    background-color: #dfff45;
+    color: rgb(63, 61, 61);
+    box-sizing: border-box;
+    border-radius: 20px;
+  }
+  :global(.mdc-chip) {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  :global(.mdc-chip button) {
+    position: absolute;
+    right: 9px;
+  }
+  .selector-row :global(div > span > span) {
     text-align: center;
   }
-  .single-deco-selector-container :global(div > span:nth-child(2)) {
+  .selector-row :global(div > span:nth-child(2)) {
     display: none;
   }
-  .single-deco-selector-container :global(.level-autocomplete) {
+  .selector-row :global(.level-autocomplete) {
     flex-grow: 1;
     box-sizing: border-box;
     flex-basis: 0px;
     min-width: 0px;
   }
 
-  .single-deco-selector-container :global(.deco-autocomplete) {
+  .selector-row :global(.deco-autocomplete) {
     flex-grow: 4;
     flex-basis: 0px;
     box-sizing: border-box;
   }
 
-  .single-deco-selector-container {
+  .selector-row {
     display: flex;
     flex-direction: row;
     max-width: 100%;

@@ -6,6 +6,7 @@
   import { scale } from "svelte/transition";
   import ArmorPieceInspector from "./ArmorPieceInspector.svelte";
   import DetailedSetViewer from "./DetailedSetViewer.svelte";
+  import CircularProgress from "@smui/circular-progress";
 
   import Autocomplete from "@smui-extra/autocomplete";
 
@@ -13,66 +14,155 @@
   import Chip, { Set, TrailingAction, Text } from "@smui/chips";
   import Button, { Label } from "@smui/button";
 
-  let fruits = ["Apple", "Orange", "Banana", "Mango"];
-  let valueOutlined;
-  let numSelectors = 2;
-  let selectors = Array(numSelectors).fill(null);
+  let solutionsLoading = true;
+
+  let currentParts = [
+    {
+      partName: "Lambent Casque",
+      decoNames: [
+        "Weakness Exploit Lv2",
+        "Critical Eye Lv2",
+        "Dragon Resistance Lv2",
+      ],
+    },
+    {
+      partName: "Drakehide Mail",
+      decoNames: ["Guard Lv1", "Agitator Lv2", "Stamina Surge Lv2"],
+    },
+    {
+      partName: "Wyrmclaw Gauntlets",
+      decoNames: ["Attack Boost Lv1", "Agitator Lv2", "Evade Window Lv1"],
+    },
+    {
+      partName: "Serpentscale Coil",
+      decoNames: ["Focus Lv2", "Agitator Lv1", "Defense Boost Lv1"],
+    },
+    {
+      partName: "Skystride Greaves",
+      decoNames: ["Weakness Exploit Lv1", "Jump Master Lv1", "Windproof Lv2"],
+    },
+  ];
 
   let currentTab;
-  const addSelector = () => {
-    if (numSelectors < 45) {
-      numSelectors += 1;
-      selectors.push(null); // Add a new slot for the new component instance
-    }
-  };
-  const removeSelector = () => {
-    if (numSelectors > 0) {
-      numSelectors -= 1;
-      selectors.pop(); // Remove the last component instance reference
-    }
-  };
+
+  let solutions = [];
+
+  let constraints = [
+    { skill: "WeaknessExploit", relation: "<", level: 2 },
+    /*
+    { skill: "AttackBoost", relation: "<=", level: 7 },
+    { skill: "CriticalEye", relation: "<=", level: 7 },
+    { skill: "Earplugs", relation: "<", level: 5 },
+    { skill: "Handicraft", relation: "<", level: 5 },
+    { skill: "Agitator", relation: "<=", level: 5 },
+    { skill: "HealthBoost", relation: "<=", level: 3 },
+    { skill: "CriticalBoost", relation: "<", level: 3 },
+    { skill: "Guard", relation: "<", level: 5 },
+    { skill: "EvadeWindow", relation: "<=", level: 5 },
+    { skill: "Focus", relation: "<", level: 3 },
+    { skill: "StaminaSurge", relation: "<", level: 3 },
+    { skill: "Windproof", relation: "<", level: 5 },
+    { skill: "Partbreaker", relation: "<", level: 3 },
+    { skill: "QuickSheath", relation: "<", level: 3 },
+    { skill: "SpeedEating", relation: "<", level: 3 },
+    { skill: "DivineBlessing", relation: "<", level: 3 },
+    { skill: "GuardUp", relation: "<", level: 1 },
+    { skill: "FreeMeal", relation: "<", level: 3 },
+    { skill: "WideRange", relation: "<", level: 5 },
+    { skill: "SpeedSharpening", relation: "<", level: 3 },
+    */
+  ];
 
   function handleActiveChange(event) {
     currentTab = event.detail;
     // console.log(currentTab);
   }
+
+  function getSolutions(constraints) {
+    solutionsLoading = false;
+    // Define the URL for your request
+    const url = "http://127.0.0.1:5000/send_data";
+
+    // Use the Fetch API to send a POST request with constraints as the body
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(constraints), // Convert the constraints object to a JSON string
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        return response.json(); // Parse the response to JSON
+      })
+      .then((data) => {
+        solutions = data;
+        solutionsLoading = false;
+        console.log(solutions);
+      })
+      .catch((error) => {
+        console.log(
+          "There was a problem with the fetch operation:",
+          error.message
+        );
+      });
+  }
 </script>
 
-<div>OptiRise</div>
-<Tabs on:activeChange={handleActiveChange} />
+<div class="app-root">
+  <div>OptiRise</div>
+  <Tabs on:activeChange={handleActiveChange} />
 
-<div class="page-container">
-  <div class="page-section">
-    <div class="inspector-subsection">
-      {#each { length: 5 } as a, b}
-        <ArmorPieceInspector />
-      {/each}
-    </div>
-  </div>
-
-  <div class="page-section">
-    <div>
-      <Switch class="my-fully-colored-switch" />
-    </div>
-    <button on:click={addSelector}>+</button>
-    <button on:click={removeSelector}>-</button>
-    {#if currentTab && currentTab.icon == "access_time"}
-      <div class="deco-subsection">
-        <div>
-          {#each { length: numSelectors } as _, i}
-            <Cell class="cell">
-              <DecoSelector bind:this={selectors[i]} />
-            </Cell>
-          {/each}
-        </div>
+  <div class="page-container">
+    <div class="page-section">
+      <div class="inspector-subsection">
+        <div class="inspector-subsection-label">Current Build</div>
+        {#each { length: 5 } as a, i}
+          <ArmorPieceInspector part={currentParts[i]} />
+        {/each}
       </div>
-    {:else}<DetailedSetViewer />
-    {/if}
+    </div>
+
+    <div class="page-section">
+      {#if currentTab && currentTab.icon == "access_time"}
+        <div class="deco-subsection">
+          <div>
+            <Cell class="cell">
+              <DecoSelector bind:constraints {getSolutions} />
+            </Cell>
+          </div>
+        </div>
+      {:else if !solutionsLoading}<DetailedSetViewer {solutions} />{:else}
+        <CircularProgress class="circular-progress" indeterminate />
+      {/if}
+    </div>
   </div>
 </div>
 
 <style>
-  .inspector-scroll-page {
+  .app-root :global(.circular-progress) {
+    width: 100%;
+    height: 100%;
+  }
+  .app-root {
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .inspector-subsection-label {
+    flex-shrink: 0;
+    height: 20px;
+    background-color: #fff500;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    text-align: center;
+    color: black;
   }
   .deco-selectors-container {
     display: flex;
@@ -93,9 +183,10 @@
     flex-direction: row;
     align-items: stretch;
     justify-items: center;
-    height: 100vh;
+
     overflow: hidden;
     margin: 0;
+    gap: 5px;
   }
 
   .page-section {
@@ -103,17 +194,24 @@
     flex-basis: 50%;
 
     overflow-y: auto;
+    scrollbar-width: none;
 
     border-radius: 10px;
+  }
+
+  .page-section::-webkit-scrollbar {
+    display: none;
   }
   .page-section:nth-child(1) {
     background-color: transparent;
     display: flex;
     justify-content: center;
+    background-image: url("bg.jpeg");
   }
   .page-section:nth-child(2) {
     background-color: #021526;
     justify-content: flex-start;
+    background-image: url("bg2.jpeg");
   }
 
   .deco-subsection {
@@ -129,13 +227,11 @@
     height: 100%;
 
     align-items: center;
-    overflow-y: scroll;
 
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 30px;
 
     scrollbar-width: 0px;
   }

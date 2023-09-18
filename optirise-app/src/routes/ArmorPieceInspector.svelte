@@ -8,12 +8,15 @@
   import Button from "@smui/button";
 
   let clicked = "nothing yet";
-  export let decoNames = [
-    "Weakness Exploit Lv2",
-    "Agitator Lv3",
-    "Dragon Resistance Lv4",
-  ];
-  export let pieceName = "Buff Chest";
+
+  export let part = {
+    partName: "Buff Chest",
+    decoNames: [
+      "Weakness Exploit Lv2",
+      "Agitator Lv3",
+      "Dragon Resistance Lv4",
+    ],
+  };
 </script>
 
 <div class="inspector-container">
@@ -23,13 +26,13 @@
     on:click={() => clicked++}
     variant="raised"
   >
-    <Label>{pieceName}</Label>
+    <Label>{part.partName}</Label>
   </Button>
   <List class="deco-displays-list">
     {#each { length: 3 } as a, i}
       <Item on:SMUI:action={() => (clicked = "Cut")} class="list-item"
         ><Button color="secondary" on:click={() => clicked++} variant="raised">
-          <Label>{decoNames[i]}</Label>
+          <Label>{part.decoNames[i]}</Label>
         </Button></Item
       >
     {/each}
@@ -45,13 +48,11 @@
   :global(.mdc-deprecated-list-item__ripple) {
     display: none;
   }
-  :global(.mdc-button) {
+  .inspector-container :global(.mdc-button) {
     padding: 0px;
     height: 80%;
     width: 100%;
-    background-color: aqua;
   }
-
   :global(.list-item) {
     height: 4vh;
   }

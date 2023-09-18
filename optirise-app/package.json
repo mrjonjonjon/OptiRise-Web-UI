@@ -17,6 +17,7 @@
 		"@smui-extra/autocomplete": "^7.0.0-beta.15",
 		"@smui/button": "^7.0.0-beta.15",
 		"@smui/chips": "^7.0.0-beta.15",
+		"@smui/circular-progress": "^7.0.0-beta.15",
 		"@smui/data-table": "^7.0.0-beta.15",
 		"@smui/icon-button": "^7.0.0-beta.15",
 		"@smui/layout-grid": "^7.0.0-beta.15",
@@ -37,6 +38,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"fs": "^0.0.1-security",
 		"svelte-table": "^0.6.1"
 	}
 }

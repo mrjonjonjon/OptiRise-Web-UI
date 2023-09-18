@@ -1,46 +1,39 @@
 <script>
+  //extendable panel for a single full solution
   import Accordion, { Panel, Header, Content } from "@smui-extra/accordion";
-  const rows = [
-    /** data (example below) */
-  ];
-  const columns = [
-    /** columns config (example below) */
-  ];
 
-  export let numSkills = [1, 2, 3, 4, 5];
-  export let numDecos = [2, 5, 1, 2, 3];
-  export let partNames = [
-    "Pride Helm",
-    "Buff Chest",
-    "Onmyou Tekkou",
-    "Pride Waist",
-    "Ceanataur X",
-  ];
+  export let solution = {};
 </script>
 
 <Accordion>
   <Panel extend>
     <Header>
       <div class="part-infos-container">
-        {#each { length: 5 } as a, i}
-          <div class="part-info header">{partNames[i]}</div>
+        {#each ["head", "body", "arm", "waist", "leg"] as partType, i}
+          <div class="part-info header">{solution[partType].partName}</div>
         {/each}
       </div></Header
     >
     <Content>
       <div class="part-infos-container">
-        {#each { length: 5 } as a, i}
+        {#each ["head", "body", "arm", "waist", "leg"] as partType, i}
           <div class="part-info">
-            {#each { length: numSkills[i] } as a, b}<div
-                class="single-skill-info"
-              >
-                Agitator Lv2
-              </div>{/each}
-            {#each { length: numDecos[i] } as a, b}<div
-                class="single-deco-info"
-              >
-                Agitator Lv2
-              </div>{/each}
+            {#if solution[partType].skills}
+              {#each solution[partType].skills as [skillname, skillevel]}
+                <div class="single-skill-info">
+                  {skillname},{skillevel}
+                </div>
+              {/each}
+            {/if}
+            {#if solution[partType].decoNames.length > 0}
+              {#each solution[partType].decoNames as deco}
+                <div class="single-deco-info">
+                  {deco}
+                </div>
+              {/each}
+            {:else}
+              <div />
+            {/if}
           </div>
         {/each}
       </div>
@@ -53,6 +46,10 @@
     font-size: x-small;
   }
   :global(.smui-paper__content) {
+    padding: 0px !important;
+    text-align: center;
+  }
+  :global(.smui-accordion__header__title) {
     padding: 0px !important;
     text-align: center;
   }

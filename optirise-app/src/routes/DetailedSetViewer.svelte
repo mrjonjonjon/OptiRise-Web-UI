@@ -12,27 +12,17 @@
   import ExtendableArmorPanel from "./ExtendableArmorPanel.svelte";
   import ArmorPieceInspector from "./ArmorPieceInspector.svelte";
 
-  let items = [];
+  export let solutions = []; //each item represents a complete solution
   let rowsPerPage = 10;
   let currentPage = 0;
 
   $: start = currentPage * rowsPerPage;
-  $: end = Math.min(start + rowsPerPage, items.length);
-  $: slice = items.slice(start, end);
-  $: lastPage = Math.max(Math.ceil(items.length / rowsPerPage) - 1, 0);
+  $: end = Math.min(start + rowsPerPage, solutions.length);
+  $: slice = solutions.slice(start, end);
+  $: lastPage = Math.max(Math.ceil(solutions.length / rowsPerPage) - 1, 0);
 
   $: if (currentPage > lastPage) {
     currentPage = lastPage;
-  }
-
-  if (typeof fetch !== "undefined") {
-    // Slice a few off the end to show how the
-    // last page looks when it's not full.
-    fetch(
-      "https://gist.githubusercontent.com/hperrin/e24a4ebd9afdf2a8c283338ae5160a62/raw/dcbf8e6382db49b0dcab70b22f56b1cc444f26d4/todos.json"
-    )
-      .then((response) => response.json())
-      .then((json) => (items = json.slice(0, 197)));
   }
 </script>
 
@@ -47,7 +37,9 @@
     {#each slice as item, i (item.id)}
       <Row>
         <Cell numeric>{item.id}</Cell>
-        <Cell style="width:100%"><ExtendableArmorPanel /></Cell>
+        <Cell style="width:100%"
+          ><ExtendableArmorPanel solution={item.solution} /></Cell
+        >
       </Row>
     {/each}
   </Body>
@@ -62,7 +54,7 @@
       </Select>
     </svelte:fragment>
     <svelte:fragment slot="total">
-      {start + 1}-{end} of {items.length}
+      {start + 1}-{end} of {solutions.length}
     </svelte:fragment>
 
     <IconButton
