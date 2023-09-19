@@ -19,8 +19,8 @@
       label: "Results",
     },
   ];
-  let active = tabs[0];
-  $: dispatch("activeChange", active);
+  export let active = tabs[0];
+  //$: dispatch("activeChange", active);
 </script>
 
 <div>

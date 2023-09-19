@@ -43,35 +43,14 @@
     },
   ];
 
-  let currentTab;
+  let currentTab = {
+    icon: "access_time",
+    label: "Skill Constraints",
+  };
 
   let solutions = [];
 
-  let constraints = [
-    { skill: "WeaknessExploit", relation: "<", level: 2 },
-    /*
-    { skill: "AttackBoost", relation: "<=", level: 7 },
-    { skill: "CriticalEye", relation: "<=", level: 7 },
-    { skill: "Earplugs", relation: "<", level: 5 },
-    { skill: "Handicraft", relation: "<", level: 5 },
-    { skill: "Agitator", relation: "<=", level: 5 },
-    { skill: "HealthBoost", relation: "<=", level: 3 },
-    { skill: "CriticalBoost", relation: "<", level: 3 },
-    { skill: "Guard", relation: "<", level: 5 },
-    { skill: "EvadeWindow", relation: "<=", level: 5 },
-    { skill: "Focus", relation: "<", level: 3 },
-    { skill: "StaminaSurge", relation: "<", level: 3 },
-    { skill: "Windproof", relation: "<", level: 5 },
-    { skill: "Partbreaker", relation: "<", level: 3 },
-    { skill: "QuickSheath", relation: "<", level: 3 },
-    { skill: "SpeedEating", relation: "<", level: 3 },
-    { skill: "DivineBlessing", relation: "<", level: 3 },
-    { skill: "GuardUp", relation: "<", level: 1 },
-    { skill: "FreeMeal", relation: "<", level: 3 },
-    { skill: "WideRange", relation: "<", level: 5 },
-    { skill: "SpeedSharpening", relation: "<", level: 3 },
-    */
-  ];
+  let constraints = [{ skill: "WeaknessExploit", relation: "<", level: 2 }];
 
   function handleActiveChange(event) {
     currentTab = event.detail;
@@ -79,6 +58,10 @@
   }
 
   function getSolutions(constraints) {
+    currentTab = {
+      icon: "near_me",
+      label: "Weapon Constraints",
+    };
     solutionsLoading = true;
     // Define the URL for your request
     const url = "http://127.0.0.1:5000/send_data";
@@ -114,7 +97,7 @@
 
 <div class="app-root">
   <div>OptiRise</div>
-  <Tabs on:activeChange={handleActiveChange} />
+  <Tabs on:activeChange={handleActiveChange} bind:active={currentTab} />
 
   <div class="page-container">
     <div class="page-section">

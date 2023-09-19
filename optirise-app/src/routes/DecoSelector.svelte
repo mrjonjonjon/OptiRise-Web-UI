@@ -6,12 +6,13 @@
   import Button, { Label } from "@smui/button";
   export let getSolutions;
   let all_skills = [];
+  import { onMount } from "svelte";
 
-  fetch("/all_skills.json")
-    .then((response) => response.json())
-    .then((json) => {
-      all_skills = json;
-    });
+  onMount(async () => {
+    const response = await fetch("/all_skills.json");
+    all_skills = await response.json();
+  });
+
   // Read the JSON file synchronously
   //const jsonString = fs.readFileSync("../../static/all_skills.json", "utf8");
   //console.log(data);
