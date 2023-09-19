@@ -135,7 +135,9 @@
             </Cell>
           </div>
         </div>
-      {:else if !solutionsLoading}<DetailedSetViewer {solutions} />{:else}
+      {:else if !solutionsLoading}<div class="detailed-viewer-subsection">
+          <DetailedSetViewer {solutions} />
+        </div>{:else}
         <CircularProgress class="circular-progress" indeterminate />
       {/if}
     </div>
@@ -143,6 +145,10 @@
 </div>
 
 <style>
+  .detailed-viewer-subsection {
+    height: 100%;
+    background-color: black;
+  }
   .app-root :global(.circular-progress) {
     width: 100%;
     height: 100%;
