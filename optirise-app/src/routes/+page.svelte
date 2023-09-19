@@ -14,7 +14,7 @@
   import Chip, { Set, TrailingAction, Text } from "@smui/chips";
   import Button, { Label } from "@smui/button";
 
-  let solutionsLoading = true;
+  let solutionsLoading = false;
 
   let currentParts = [
     {
@@ -79,7 +79,7 @@
   }
 
   function getSolutions(constraints) {
-    solutionsLoading = false;
+    solutionsLoading = true;
     // Define the URL for your request
     const url = "http://127.0.0.1:5000/send_data";
 
