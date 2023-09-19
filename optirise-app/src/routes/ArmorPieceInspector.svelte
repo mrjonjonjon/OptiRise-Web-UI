@@ -8,8 +8,9 @@
   import Button from "@smui/button";
 
   let clicked = "nothing yet";
-
+  export let partIconUrl = "/helm.png";
   export let part = {
+    partIconUrl: "/helm.png",
     partName: "Buff Chest",
     decoNames: [
       "Weakness Exploit Lv2",
@@ -25,7 +26,7 @@
     color="secondary"
     on:click={() => clicked++}
     variant="raised"
-  >
+    ><img class="part-icon" src={partIconUrl} />
     <Label>{part.partName}</Label>
   </Button>
   <List class="deco-displays-list">
@@ -45,6 +46,9 @@
 -->
 
 <style lang="scss">
+  .inspector-container img {
+    height: 3vh;
+  }
   :global(.mdc-deprecated-list-item__ripple) {
     display: none;
   }
@@ -52,6 +56,7 @@
     padding: 0px;
     height: 80%;
     width: 100%;
+    gap: 6px;
   }
   :global(.list-item) {
     height: 4vh;

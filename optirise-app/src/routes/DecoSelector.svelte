@@ -79,7 +79,7 @@
     <Button
       class="add-button"
       on:click={addInputChip(valueOutlined, selectedRelation, selectedLevel)}
-      ><Label>Add</Label></Button
+      ><Label>Add Constraint</Label></Button
     >
     <Button
       class="find-solutions-button"

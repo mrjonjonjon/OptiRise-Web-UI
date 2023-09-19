@@ -15,6 +15,13 @@
   import Button, { Label } from "@smui/button";
 
   let solutionsLoading = false;
+  let partIconUrls = [
+    "/helm.png",
+    "body.png",
+    "/arm.png",
+    "waist.png",
+    "leg.png",
+  ];
 
   let currentParts = [
     {
@@ -104,7 +111,10 @@
       <div class="inspector-subsection">
         <div class="inspector-subsection-label">Current Build</div>
         {#each { length: 5 } as a, i}
-          <ArmorPieceInspector part={currentParts[i]} />
+          <ArmorPieceInspector
+            part={currentParts[i]}
+            partIconUrl={partIconUrls[i]}
+          />
         {/each}
       </div>
     </div>
