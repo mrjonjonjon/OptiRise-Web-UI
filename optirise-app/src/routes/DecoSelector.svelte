@@ -97,9 +97,19 @@
 </div>
 
 <style>
+  .top-deco-selector :global(.deco-autocomplete) > :global(div:first-of-type) {
+    height: 100%;
+  }
+
+  .top-deco-selector :global(.mdc-text-field--outlined) {
+    height: 100%;
+  }
+  .top-deco-selector :global(.mdc-select__anchor) {
+    height: 100%;
+  }
+
   .top-deco-selector :global(.mdc-select),
   :global(.smui-autocomplete) {
-    border: 1px solid rgb(255, 255, 255);
     box-sizing: border-box;
     width: 100%;
     padding: auto;
