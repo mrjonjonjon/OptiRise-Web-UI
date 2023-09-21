@@ -13,7 +13,7 @@
   import Select, { Option } from "@smui/select";
   import Chip, { Set, TrailingAction, Text } from "@smui/chips";
   import Button, { Label } from "@smui/button";
-
+  //#region variables
   let solutionsLoading = false;
   let partIconUrls = [
     "/helm.png",
@@ -58,17 +58,20 @@
   let solutions = [];
 
   let constraints = [{ skill: "WeaknessExploit", relation: "<", level: 2 }];
-
+  //#endregion
+  $: console.log(currentTab);
+  //#region function
   function handleActiveChange(event) {
     currentTab = event.detail;
     // console.log(currentTab);
   }
 
   function getSolutions(constraints) {
+    /*
     currentTab = {
       icon: "near_me",
       label: "Weapon Constraints",
-    };
+    };*/
     solutionsLoading = true;
     // Define the URL for your request
     const url = "http://127.0.0.1:5000/send_data";
@@ -100,6 +103,7 @@
         );
       });
   }
+  //#endregion
 </script>
 
 <div class="app-root">
@@ -110,7 +114,7 @@
     <div class="page-section">
       <div class="inspector-subsection">
         <div class="inspector-subsection-label">Current Build</div>
-        {#each { length: 5 } as a, i}
+        {#each { length: 5 } as _, i}
           <ArmorPieceInspector
             part={currentParts[i]}
             partIconUrl={partIconUrls[i]}
